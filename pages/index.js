@@ -1,115 +1,100 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import { useEffect, useState } from "react";
+
+import styles from "../styles/Home.module.css";
+
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import ShareLocationIcon from "@mui/icons-material/ShareLocation";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import Icons from "../components/icons";
 
 export default function Home() {
+  const [search, setSearch] = useState("");
+  const [values, setValues] = useState("");
+  const [icon, setIcons] = useState("");
+
+  const ID = "527f55ad48d1aba08f562b838215d912";
+
+  const URL = `https://api.openweathermap.org/data/2.5/weather?q=${search}&units=metric&lang=pt_br&appid=${ID}`;
+
+  const getData = async () => {
+    await fetch(URL)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.cod >= 400) {
+          setValues(false);
+        } else {
+          setIcons(data.weather[0].main);
+          setValues(data);
+          console.log("xsxsxs", data);
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      setSearch(e.target.value);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [search]);
+
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <div className={styles.search}>
+        <TextField
+          id="outlined-basic"
+          label="Buscar por Cidade"
+          variant="outlined"
+          autoFocus
+          helperText="Pesquise por uma cidade e aperte ENTER"
+          onKeyDown={handleSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <ShareLocationIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </div>
 
-      <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
-        </a>
-      </footer>
-
-      <style jsx>{`
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        footer img {
-          margin-left: 0.5rem;
-        }
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-decoration: none;
-          color: inherit;
-        }
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
+      <div>
+        {values ? (
+          <main>
+            <div className={styles.card}>
+              <h3>{values.name}</h3>
+              <p>{values.main.temp.toFixed(0)}&deg;</p>
+              <img src={Icons(icon)} alt="icon-weather" />
+              <div>
+                <p>
+                  min {values.main.temp_min.toFixed(0)}&deg; | máx{" "}
+                  {values.main.temp_max.toFixed(0)}&deg;
+                </p>
+              </div>
+              <div>
+              {values.weather.map((e) => {
+                return (
+                  <p>{e.description}</p>
+                )
+              })}
+              </div>
+            </div>
+          </main>
+        ) : (
+          <div>
+            <h3> Cidade não encontrada ... </h3>
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }

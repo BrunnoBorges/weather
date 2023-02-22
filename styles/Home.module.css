@@ -5,6 +5,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(to right top, #65dfc9, #6cdbeb);
+  margin: 0 auto;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .title a {
@@ -50,15 +58,24 @@
 }
 
 .card {
+  width: 20rem;
+  padding: 1.5rem 0;
   margin: 1rem;
-  flex-basis: 45%;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
+  text-align: center;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.1)
+  );
+  z-index: 3;
+  backdrop-filter: blur(2rem);
+  border-radius: 2rem;
+  -webkit-border-radius: 2rem;
+  -moz-border-radius: 2rem;
+  -ms-border-radius: 2rem;
+  -o-border-radius: 2rem;
 }
 
 .card:hover,
@@ -66,6 +83,10 @@
 .card:active {
   color: #0070f3;
   border-color: #0070f3;
+}
+
+.card img {
+  width: 10rem;
 }
 
 .card h3 {
