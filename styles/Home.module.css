@@ -5,8 +5,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to right top, #65dfc9, #6cdbeb);
+  background: linear-gradient(to right top, #f30d9e, #21c1d8);
   margin: 0 auto;
+}
+
+.lottie {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .search {

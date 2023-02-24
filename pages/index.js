@@ -5,9 +5,11 @@ import styles from "../styles/Home.module.css";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import ShareLocationIcon from "@mui/icons-material/ShareLocation";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
+
 import Icons from "../components/icons";
+
+import Lottie from "react-lottie";
+import animationData from "../public/lottie/36622-sunny-rainy.json";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -17,6 +19,15 @@ export default function Home() {
   const ID = "527f55ad48d1aba08f562b838215d912";
 
   const URL = `https://api.openweathermap.org/data/2.5/weather?q=${search}&units=metric&lang=pt_br&appid=${ID}`;
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   const getData = async () => {
     await fetch(URL)
@@ -49,6 +60,10 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <div className={styles.lottie}>
+        <Lottie options={defaultOptions} height={400} width={400} />
+      </div>
+      <h1>Veja aqui como esta o clima da sua cidade.</h1>
       <div className={styles.search}>
         <TextField
           id="outlined-basic"
@@ -81,11 +96,9 @@ export default function Home() {
                 </p>
               </div>
               <div>
-              {values.weather.map((e) => {
-                return (
-                  <p>{e.description}</p>
-                )
-              })}
+                {values.weather.map((e) => {
+                  return <p>{e.description}</p>;
+                })}
               </div>
             </div>
           </main>
